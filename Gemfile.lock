@@ -2,7 +2,9 @@ PATH
   remote: .
   specs:
     asimov-anthropic-module (0.0.0)
+      asimov-construct (>= 25.0.0.dev)
       asimov-module (>= 25.0.0.dev)
+      mini_mime (~> 1.1)
       omniai (~> 1.9)
       omniai-anthropic (~> 1.9)
 
@@ -13,9 +15,13 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     asimov-config (25.0.0.dev.4)
       pathname (>= 0.4)
+    asimov-construct (25.0.0.dev.4)
+      asimov-config (= 25.0.0.dev.4)
+      kdl (~> 2.0)
     asimov-module (25.0.0.dev.4)
       asimov-config (= 25.0.0.dev.4)
     base64 (0.2.0)
+    bigdecimal (3.1.9)
     domain_name (0.6.20240107)
     event_stream_parser (1.0.0)
     ffi (1.17.1)
@@ -32,10 +38,16 @@ GEM
     http-cookie (1.0.8)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
+    kdl (2.0.2)
+      base64 (~> 0.2.0)
+      bigdecimal (~> 3.1.6)
+      racc (~> 1.5)
+      simpleidn (~> 0.2.1)
     llhttp-ffi (0.5.0)
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
     logger (1.6.6)
+    mini_mime (1.1.5)
     omniai (1.9.5)
       event_stream_parser
       http
@@ -47,7 +59,9 @@ GEM
       zeitwerk
     pathname (0.4.0)
     public_suffix (6.0.1)
+    racc (1.8.1)
     rake (13.2.1)
+    simpleidn (0.2.3)
     zeitwerk (2.7.1)
 
 PLATFORMS

@@ -1,2 +1,90 @@
 #!/usr/bin/env ruby
 require "bundler/setup"
+
+require "asimov/construct"
+require "asimov/module"
+require "mini_mime"
+require "omniai/anthropic"
+require "optparse"
+
+trap(:SIGINT) { abort "" }
+
+ARGV0 = File.basename($0).freeze
+
+options = {
+  model: OmniAI::Anthropic::Chat::DEFAULT_MODEL,
+}
+
+option_parser = OptionParser.new do |parser|
+  parser.banner = "Usage: #{ARGV0} [OPTIONS] CONSTRUCT PROMPT INPUTS...\n\nOptions:"
+  parser.on("-d", "--debug", "Enable debugging output") do
+    options[:debug] = true
+  end
+  parser.on("-m", "--model=ID", "Override the model [default: #{options[:model]}]") do |model_id|
+    options[:model] = model_id
+  end
+  parser.on("-o", "--output=FILE", "Write to file instead of stdout") do |output_path|
+    options[:output] = output_path
+  end
+  parser.on("-v", "--verbose", "Enable verbose output") do
+    options[:verbose] = true
+  end
+  parser.on("-V", "--version", "Print version information") do
+    File.read(File.expand_path("../VERSION", __dir__)).strip.tap do |version|
+      puts "#{ARGV0} #{version}"; exit
+    end
+  end
+end
+
+begin
+  option_parser.parse!(ARGV)
+rescue OptionParser::InvalidOption => error
+  abort "#{ARGV0}: invalid option: `#{error.args.join(' ')}`"
+end
+
+api_key = ENV["ANTHROPIC_API_KEY"]
+abort "#{ARGV0}: missing ANTHROPIC_API_KEY" if api_key.to_s.empty?
+
+construct_id = ARGV.shift
+abort "#{ARGV0}: missing construct ID" unless construct_id
+
+construct = ASIMOV::Construct.open(construct_id)
+abort "#{ARGV0}: unknown construct ID" unless construct
+
+prompt_text = case ARGV.first
+  when nil then abort "#{ARGV0}: missing prompt"
+  when "-", "@/dev/stdin" then ARGV.shift; $stdin.read
+  when /^@/ then begin
+    File.read(ARGV.shift[1..])
+  rescue => error
+    abort "#{ARGV0}: invalid `@file` prompt: #{error.message}"
+  end
+  else ARGV.shift
+end
+
+prompt = OmniAI::Chat::Prompt.build do |prompt|
+  prompt.system(construct.system_prompt)
+  prompt.user do |message|
+    message.text(prompt_text)
+    ARGV.each do |input|
+      case input
+        when /^https?:\/\// then message.url(input) # TODO: content type
+        when /^@/ then message.file(input[1..], MiniMime.lookup_by_filename(input[1..])&.content_type)
+        else message.file(input, MiniMime.lookup_by_filename(input)&.content_type)
+      end
+    end
+  end
+end
+
+client = OmniAI::Anthropic::Client.new(api_key:)
+model = options[:model]
+stream = case options[:output]
+  when nil, "-", "/dev/stdout" then $stdout
+  else begin
+    File.open(options[:output], "w")
+  rescue => error
+    abort "#{ARGV0}: invalid `--output` file: #{error.message}"
+  end
+end
+
+OmniAI::Anthropic::Chat.new(prompt, client:, model:, stream:).process!
