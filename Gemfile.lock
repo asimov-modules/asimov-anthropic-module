@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    asimov-anthropic-module (0.0.0)
+    asimov-anthropic-module (0.1.0)
       asimov-construct (>= 25.0.0.dev)
       asimov-module (>= 25.0.0.dev)
       mini_mime (~> 1.1)
