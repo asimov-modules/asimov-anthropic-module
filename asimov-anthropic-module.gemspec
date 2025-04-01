@@ -28,7 +28,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     "asimov-construct", ">= 25.0.0.dev"
   gem.add_runtime_dependency     "asimov-module", ">= 25.0.0.dev"
   gem.add_runtime_dependency     "mini_mime", "~> 1.1"
-  gem.add_runtime_dependency     "omniai", "~> 1.9"
+  gem.add_runtime_dependency     "omniai", ">= 1.9", "< 3.0"
   gem.add_runtime_dependency     "omniai-anthropic", "~> 1.9"
   #gem.add_runtime_dependency     "optparse", ">= 0.3.1" # Ruby 3.2.0
 end
