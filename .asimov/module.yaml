@@ -2,7 +2,7 @@
 name: anthropic
 label: Anthropic
 title: ASIMOV Anthropic Module
-summary: LLM inference powered by Anthropic
+summary: LLM inference powered by Anthropic.
 links:
   - https://github.com/asimov-modules/asimov-anthropic-module
   - https://crates.io/crates/asimov-anthropic-module
