@@ -1,4 +1,5 @@
 # See: https://asimov-specs.github.io/module-manifest/
+---
 name: anthropic
 label: Anthropic
 title: ASIMOV Anthropic Module
