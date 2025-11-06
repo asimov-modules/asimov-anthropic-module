@@ -14,7 +14,7 @@ repository = "https://github.com/asimov-modules/asimov-anthropic-module"
 license = "Unlicense"
 keywords = ["asimov-module", "asimov", "ai"]
 categories = ["command-line-utilities", "text-processing"]               # TODO
-publish = false
+publish = true
 
 [features]
 default = ["all", "cli", "std"]
