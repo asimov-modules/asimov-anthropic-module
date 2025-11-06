@@ -38,7 +38,7 @@ dependencies = [
 
 [[package]]
 name = "asimov-anthropic-module"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "asimov-module",
  "bon",
