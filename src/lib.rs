@@ -3,12 +3,12 @@
 #![no_std]
 #![forbid(unsafe_code)]
 
+use anyhow::{Context as _, Result, anyhow};
 use asimov_module::{
     prelude::*,
     secrecy::{ExposeSecret, SecretString},
     tracing,
 };
-use core::error::Error;
 use serde_json::{Value, json};
 
 #[derive(Clone, Debug, bon::Builder)]
@@ -27,7 +27,7 @@ pub struct Options {
     pub api_key: SecretString,
 }
 
-pub fn chat(input: impl AsRef<str>, options: &Options) -> Result<Vec<String>, Box<dyn Error>> {
+pub fn chat(input: impl AsRef<str>, options: &Options) -> Result<Vec<String>> {
     let req = json!({
         "model": options.model,
         "max_tokens": options.max_tokens,
@@ -46,20 +46,19 @@ pub fn chat(input: impl AsRef<str>, options: &Options) -> Result<Vec<String>, Bo
         .header("anthropic-version", "2023-06-01")
         .header("content-type", "application/json")
         .send_json(&req)
-        .inspect_err(|e| tracing::error!("HTTP request failed: {e}"))?;
+        .context("HTTP request failed")?;
     tracing::debug!(response = ?resp);
 
     let status = resp.status();
-    tracing::debug!(status = status.to_string());
 
     let resp: Value = resp
         .body_mut()
         .read_json()
-        .inspect_err(|e| tracing::error!("unable to read HTTP response body: {e}"))?;
-    tracing::debug!(body = ?resp);
+        .context("unable to read HTTP response body")?;
+    tracing::debug!(response = %resp);
 
     if !status.is_success() {
-        tracing::error!("Received an error response: {status}");
+        tracing::debug!(%status, "Received an unsuccessful response");
 
         // {
         //   "type": "error",
@@ -70,7 +69,7 @@ pub fn chat(input: impl AsRef<str>, options: &Options) -> Result<Vec<String>, Bo
         //   "request_id": "req_..."
         // }
         if let Some(message) = resp["error"]["message"].as_str() {
-            return Err(message.into());
+            return Err(anyhow!(message.to_string()));
         }
     }
 
