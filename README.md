@@ -45,15 +45,15 @@ asimov module config anthropic
 Or through environment variables
 
 ```bash
-export ANTHROPIC_API_KEY="sk-ant..."
+export ASIMOV_ANTHROPIC_API_KEY="sk-ant..."
 ```
 
 ### Optional configuration
 
-| Name       | Environment Variable     | Default                     |
-| ---------- | ------------------------ | --------------------------- |
-| `endpoint` | `ANTHROPIC_API_ENDPOINT` | `https://api.anthropic.com` |
-| `model`    | `ANTHROPIC_MODEL`        | `claude-opus-4-1-20250805`  |
+| Name       | Environment Variable            | Default                     |
+| ---------- | ------------------------------- | --------------------------- |
+| `endpoint` | `ASIMOV_ANTHROPIC_API_ENDPOINT` | `https://api.anthropic.com` |
+| `model`    | `ASIMOV_ANTHROPIC_MODEL`        | `claude-opus-4-1-20250805`  |
 
 ## 📚 Reference
 

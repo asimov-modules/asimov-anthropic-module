@@ -13,10 +13,10 @@ provides:
 config:
   variables:
     - name: api-key
-      environment: ANTHROPIC_API_KEY
+      environment: ASIMOV_ANTHROPIC_API_KEY
     - name: endpoint
-      environment: ANTHROPIC_API_ENDPOINT
+      environment: ASIMOV_ANTHROPIC_API_ENDPOINT
       default: https://api.anthropic.com
     - name: model
-      environment: ANTHROPIC_MODEL
+      environment: ASIMOV_ANTHROPIC_MODEL
       default: claude-opus-4-1-20250805
