@@ -31,7 +31,7 @@ cargo install asimov-anthropic-module
 ## 👉 Examples
 
 ```bash
-asimov-anthropic-prompter
+echo "Why is the sky blue?" | asimov-anthropic-prompter
 ```
 
 ## ⚙ Configuration
